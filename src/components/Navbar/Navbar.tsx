@@ -9,7 +9,7 @@ import {
 	Typography,
 } from "@material-ui/core";
 import { ShoppingCart } from "@material-ui/icons";
-import logo from "../../assets/online-shopping.png";
+import logo from "../../assets/shopping-bag.png";
 import useStyle from "./styles";
 const Navbar = () => {
 	const classes = useStyle();
@@ -19,7 +19,7 @@ const Navbar = () => {
 				<Toolbar>
 					<Typography variant="h6" className={classes.image}>
 						<img src={logo} alt="MSB e-Commerce" height={"25px"} />
-						MSB e-Commerce
+						{" MSB e-Commerce"}
 					</Typography>
 					<div className={classes.grow} />
 					<div className={classes.button}>
