@@ -6,6 +6,7 @@ specifiers:
   '@material-ui/icons': ^4.11.3
   '@stripe/react-stripe-js': ^1.16.4
   '@stripe/stripe-js': ^1.46.0
+  '@types/chec__commerce.js': ^2.8.6
   '@types/react': ^18.0.27
   '@types/react-dom': ^18.0.10
   '@vitejs/plugin-react': ^3.1.0
@@ -28,6 +29,7 @@ dependencies:
   react-router-dom: 6.8.1_biqbaboplfbrettd7655fr4n2y
 
 devDependencies:
+  '@types/chec__commerce.js': 2.8.6
   '@types/react': 18.0.28
   '@types/react-dom': 18.0.10
   '@vitejs/plugin-react': 3.1.0_vite@4.1.1
@@ -666,6 +668,10 @@ packages:
   /@stripe/stripe-js/1.46.0:
     resolution: {integrity: sha512-dkm0zCEoRLu5rTnsIgwDf/QG2DKcalOT2dk1IVgMySOHWTChLyOvQwMYhEduGgLvyYWTwNhAUV4WOLPQvjwLwA==}
     dev: false
+
+  /@types/chec__commerce.js/2.8.6:
+    resolution: {integrity: sha512-0hrihlEHBMkZkwOeiWkWoxpNyR+pUoFTqDTQ92CABcawg1cdZcuQ8BJPbFGHdPEypqSGwHgMXNzDMFaZWHgeaA==}
+    dev: true
 
   /@types/prop-types/15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
