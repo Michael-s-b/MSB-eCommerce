@@ -12,8 +12,14 @@ import { LineItem } from "@chec/commerce.js/types/line-item";
 import { Delete } from "@material-ui/icons";
 interface Props {
 	item: LineItem;
+	handleUpdateCartQuantity: Function;
+	handleRemoveFromCart: Function;
 }
-const CartItem: React.FC<Props> = ({ item }) => {
+const CartItem: React.FC<Props> = ({
+	item,
+	handleRemoveFromCart,
+	handleUpdateCartQuantity,
+}) => {
 	const classes = useStyles();
 	return (
 		<Card>
@@ -28,25 +34,39 @@ const CartItem: React.FC<Props> = ({ item }) => {
 			</CardContent>
 			<CardActions className={classes.cartActions}>
 				<div className={classes.buttons}>
-					<Button variant="outlined" type="button" size="small">
+					<Button
+						onClick={() => {
+							const newValue = item.quantity - 1;
+							handleUpdateCartQuantity(item.id, newValue);
+						}}
+						variant="outlined"
+						type="button"
+						size="small">
 						-
 					</Button>
 					<Typography style={{ paddingInline: "0.5em" }}>
 						{item.quantity}
 					</Typography>
 
-					<Button variant="outlined" type="button" size="small">
+					<Button
+						onClick={() => {
+							const newValue = item.quantity + 1;
+							handleUpdateCartQuantity(item.id, newValue);
+						}}
+						variant="outlined"
+						type="button"
+						size="small">
 						+
 					</Button>
 				</div>
 				<Button
+					onClick={() => {
+						handleRemoveFromCart(item.id);
+					}}
 					startIcon={<Delete />}
 					variant="outlined"
 					type="button"
-					color="secondary"
-					onClick={() => {
-						alert("clicked");
-					}}>
+					color="secondary">
 					Remove
 				</Button>
 			</CardActions>

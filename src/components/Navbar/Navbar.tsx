@@ -11,12 +11,14 @@ import {
 import { ShoppingCart } from "@material-ui/icons";
 import logo from "../../assets/shopping-bag.png";
 import useStyle from "./styles";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+
 interface Props {
 	cartTotalItems: number | undefined;
 }
 const Navbar: React.FC<Props> = ({ cartTotalItems }) => {
 	const classes = useStyle();
+	const location = useLocation();
 	return (
 		<div>
 			<AppBar position="fixed" className={classes.appBar} color="inherit">
@@ -35,20 +37,22 @@ const Navbar: React.FC<Props> = ({ cartTotalItems }) => {
 					</Link>
 
 					<div className={classes.grow} />
-					<div className={classes.button}>
-						<Link to={"/cart"}>
-							<IconButton
-								aria-label="Show cart items"
-								color="inherit">
-								<Badge
-									badgeContent={cartTotalItems}
-									color="secondary"
-									overlap="rectangular">
-									<ShoppingCart color="action" />
-								</Badge>
-							</IconButton>
-						</Link>
-					</div>
+					{location.pathname === "/" ? (
+						<div className={classes.button}>
+							<Link to={"/cart"}>
+								<IconButton
+									aria-label="Show cart items"
+									color="inherit">
+									<Badge
+										badgeContent={cartTotalItems}
+										color="secondary"
+										overlap="rectangular">
+										<ShoppingCart color="action" />
+									</Badge>
+								</IconButton>
+							</Link>
+						</div>
+					) : null}
 				</Toolbar>
 			</AppBar>
 		</div>

@@ -1,45 +1,102 @@
 // Import necessary dependencies and components
 import { Cart as CartType } from "@chec/commerce.js/types/cart";
 import { Product } from "@chec/commerce.js/types/product";
-import { useState, useEffect } from "react";
-import { Products, Navbar, Cart } from "./components";
-import { commerce } from "./lib/commerce";
+import { Products, Navbar, Cart, Checkout } from "./components";
 import {
 	BrowserRouter as Router,
 	Route,
 	Routes as Switch,
 } from "react-router-dom";
-
+import { useMutation, useQuery } from "react-query";
+import { fetchCart, fetchProducts } from "./lib/reactQuery";
+import { commerce } from "./lib/commerce";
+import { queryClient } from ".";
 function App() {
-	// Set up state for products and cart
-	const [products, setProducts] = useState<Product[] | undefined>(() => {
-		return [];
+	// Set up state for products
+	const {
+		data: products,
+		isLoading: isProductsLoading,
+		error: productsError,
+	} = useQuery<Product[], Error>("products", fetchProducts, {
+		staleTime: 900000,
+		cacheTime: 990000,
 	});
 
-	const [cart, setCart] = useState<CartType | undefined>({} as CartType);
+	// Set up state for the cart
+	const {
+		data: cart,
+		isLoading: isCartLoading,
+		error: cartError,
+		refetch: refetchCart,
+	} = useQuery<CartType, Error>("cart", fetchCart);
 
-	// Define functions to fetch products and cart from Commerce.js API
-	const fetchProducts = async () => {
-		const { data } = await commerce.products.list();
-		setProducts(data);
-	};
-	const fetchCart = async () => {
-		setCart(await commerce.cart.retrieve());
-	};
+	//Define mutation hook for
+	const addToCartMutation = useMutation(
+		(variables: { productId: string; quantity: number }) =>
+			commerce.cart.add(variables.productId, variables.quantity),
+		{
+			onSuccess: (data) => {
+				queryClient.setQueryData("cart", data);
+			},
+		}
+	);
+
+	const UpdateCartQuantityMutation = useMutation(
+		(variables: { productId: string; quantity: number }) => {
+			return commerce.cart.update(variables.productId, {
+				quantity: variables.quantity,
+			});
+		},
+		{
+			onSuccess: (data) => {
+				queryClient.setQueryData("cart", data);
+			},
+		}
+	);
+
+	const removeFromCartMutation = useMutation(
+		(productId: string) => {
+			return commerce.cart.remove(productId);
+		},
+		{
+			onSuccess: (data) => {
+				queryClient.setQueryData("cart", data);
+			},
+		}
+	);
+	const emptyCartMutation = useMutation(
+		() => {
+			return commerce.cart.empty();
+		},
+		{
+			onSuccess: (data) => {
+				queryClient.setQueryData("cart", data);
+			},
+		}
+	);
 
 	// Define function to add item to cart
 	const handleAddToCart = async (productId: string, quantity: number) => {
-		// Call Commerce.js API to add item to cart
-		//@ts-expect-error
-		const newCart: CartType = await commerce.cart.add(productId, quantity);
-		setCart(newCart);
+		await addToCartMutation.mutateAsync({ productId, quantity });
 	};
 
-	// Fetch products and cart on initial render using useEffect hook
-	useEffect(() => {
-		fetchProducts();
-		fetchCart();
-	}, []);
+	// Define function to update item quantity in cart
+	const handleUpdateCartQuantity = async (
+		productId: string,
+		quantity: number
+	) => {
+		await UpdateCartQuantityMutation.mutateAsync({ productId, quantity });
+	};
+
+	// Define function to remove item from cart
+	const handleRemoveFromCart = async (productId: string) => {
+		await removeFromCartMutation.mutateAsync(productId);
+	};
+
+	// Define function to empty the cart
+	const handleEmptyCart = async () => {
+		emptyCartMutation.mutateAsync();
+	};
 
 	// Set up routes using react-router-dom components
 	return (
@@ -53,12 +110,36 @@ function App() {
 					element={
 						<Products
 							products={products}
+							isProductsLoading={isProductsLoading}
 							onAddToCart={handleAddToCart}
+							error={productsError}
 						/>
 					}
 				/>
 				{/* Render Cart component on /cart page */}
-				<Route path="cart" element={<Cart cart={cart} />} />
+				<Route
+					path="cart"
+					element={
+						<Cart
+							isCartLoading={isCartLoading}
+							error={cartError}
+							cart={cart}
+							handleUpdateCartQuantity={handleUpdateCartQuantity}
+							handleRemoveFromCart={handleRemoveFromCart}
+							handleEmptyCart={handleEmptyCart}
+						/>
+					}
+				/>
+				<Route
+					path="checkout"
+					element={
+						<Checkout
+							refetchCart={refetchCart}
+							isCartLoading={isCartLoading}
+							cart={cart}
+						/>
+					}
+				/>
 			</Switch>
 		</Router>
 	);

@@ -31,9 +31,14 @@ const Product: React.FC<Props> = ({ product, onAddToCart }) => {
 			/>
 			<CardContent>
 				<div className={classes.cardContent}>
-					<Typography variant="h5" gutterBottom noWrap>
+					<Typography
+						style={{ paddingInline: "0.1em" }}
+						variant="h5"
+						gutterBottom
+						noWrap>
 						{product.name}
 					</Typography>
+
 					<Typography variant="h5">
 						{product.price.formatted_with_symbol}
 					</Typography>
