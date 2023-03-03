@@ -4,7 +4,7 @@ import useStyle from "./styles";
 import { Cart as CartType } from "@chec/commerce.js/types/cart";
 import CartItem from "./CartItem/CartItem";
 import { Link } from "react-router-dom";
-import Loading from "../Loading/Loading";
+import { Loading } from "../../";
 interface Props {
 	cart: CartType | undefined;
 	isCartLoading: boolean;
@@ -21,6 +21,7 @@ const Cart: React.FC<Props> = ({
 	error,
 	isCartLoading,
 }) => {
+	console.count("Cart render");
 	const classes = useStyle();
 	const EmptyCart: React.FC = () => {
 		return (

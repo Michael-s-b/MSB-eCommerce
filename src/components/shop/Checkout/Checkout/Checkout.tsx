@@ -13,33 +13,25 @@ import AddressForm from "../AddressForm";
 import PaymentForm from "../PaymentForm";
 import useStyles from "./styles";
 import { Cart as CartType } from "@chec/commerce.js/types/cart";
-import { CheckoutToken } from "@chec/commerce.js/types/checkout-token";
-import { useQuery } from "react-query";
-import { fetchCheckoutToken } from "../../../lib/reactQuery";
-import Loading from "../../Loading/Loading";
+import { useFetchCheckoutToken } from "../../../../hooks";
+import { z } from "zod";
 interface Props {
 	cart: CartType | undefined;
 	isCartLoading: boolean;
-	refetchCart: Function;
 }
 const steps = ["Shipping address", "Payment details"];
-const Checkout: React.FC<Props> = ({ cart, isCartLoading, refetchCart }) => {
+const Checkout: React.FC<Props> = ({ cart, isCartLoading }) => {
+	console.count("Checkout render");
 	const classes = useStyles();
-
+	const [shippingData, setShippingData] = useState<ShippingForm>(
+		{} as ShippingForm
+	);
 	const {
 		data: checkoutToken,
 		isLoading: isCheckoutTokenLoading,
 		isIdle: isCheckoutTokenIdle,
 		error: checkoutTokenError,
-	} = useQuery<CheckoutToken>(
-		["checkoutToken", cart?.id],
-		() => {
-			return fetchCheckoutToken(cart?.id);
-		},
-		{
-			enabled: !!cart?.id,
-		}
-	);
+	} = useFetchCheckoutToken(cart?.id);
 
 	const [activeStep, setActiveStep] = useState(0);
 	const Form = () => {
@@ -48,11 +40,28 @@ const Checkout: React.FC<Props> = ({ cart, isCartLoading, refetchCart }) => {
 				isCheckoutTokenLoading={isCheckoutTokenLoading}
 				checkoutToken={checkoutToken}
 				isCheckoutTokenIdle={isCheckoutTokenIdle}
+				next={next}
+				nextStep={nextStep}
 			/>
 		) : (
-			<PaymentForm />
+			<PaymentForm shippingData={shippingData} />
 		);
 	};
+	const nextStep = () => {
+		setActiveStep((prevActiveStep) => {
+			return prevActiveStep + 1;
+		});
+	};
+	const backStep = () => {
+		setActiveStep((prevActiveStep) => {
+			return prevActiveStep - 1;
+		});
+	};
+
+	const next = (data: ShippingForm) => {
+		setShippingData(data);
+	};
+
 	const Confirmation = () => {
 		return <div>Confirmation</div>;
 	};
@@ -87,3 +96,15 @@ const Checkout: React.FC<Props> = ({ cart, isCartLoading, refetchCart }) => {
 };
 
 export default Checkout;
+
+export interface ShippingForm {
+	firstName: string;
+	lastName: string;
+	address: string;
+	email: string;
+	city: string;
+	zip: number;
+	country: string;
+	subdivision: string;
+	option: string;
+}

@@ -3,20 +3,15 @@ import { Grid } from "@material-ui/core";
 import Product from "../Products/Product/Product";
 import useStyle from "./styles";
 import { Product as ProductType } from "@chec/commerce.js/types/product";
-import Loading from "../Loading/Loading";
+import { Loading } from "../../";
 interface Props {
 	products: ProductType[] | undefined;
 	isProductsLoading: boolean;
 	error: Error | null;
-	onAddToCart: Function;
 }
 
-const Products: React.FC<Props> = ({
-	products,
-	onAddToCart,
-	isProductsLoading,
-	error,
-}) => {
+const Products: React.FC<Props> = ({ products, isProductsLoading, error }) => {
+	console.count("Products render");
 	const classes = useStyle();
 	if (isProductsLoading) {
 		return <Loading />;
@@ -38,10 +33,7 @@ const Products: React.FC<Props> = ({
 								sm={6}
 								md={4}
 								lg={3}>
-								<Product
-									product={product}
-									onAddToCart={onAddToCart}
-								/>
+								<Product product={product} />
 							</Grid>
 						);
 					})}

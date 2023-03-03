@@ -1,5 +1,5 @@
-export { default as Navbar } from "./Navbar/Navbar";
-export { default as Products } from "./Products/Products";
-export { default as Cart } from "./Cart/Cart";
-export { default as Loading } from "./Loading/Loading";
-export { default as Checkout } from "./CheckoutForm/Checkout/Checkout";
+export { default as Navbar } from "./layout/Navbar/Navbar";
+export { default as Products } from "./shop/Products/Products";
+export { default as Cart } from "./shop/Cart/Cart";
+export { default as Loading } from "./layout/Loading/Loading";
+export { default as Checkout } from "./shop/Checkout/Checkout/Checkout";
