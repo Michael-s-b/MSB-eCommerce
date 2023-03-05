@@ -8,3 +8,5 @@ export { default as useFetchCheckoutToken } from "./useFetchCheckoutToken";
 export { default as useFetchShippingCountries } from "./useFetchShippingCountries";
 export { default as useFetchShippingSubdivisions } from "./useFetchShippingSubdivisions";
 export { default as useFetchShippingOptions } from "./useFetchShippingOptions";
+export { default as useRefreshCart } from "./useRefreshCart";
+export { default as useCaptureCheckout } from "./useCaptureCheckout";

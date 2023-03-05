@@ -1,4 +1,10 @@
-import { Products, Navbar, Cart, Checkout } from "./components/index";
+import {
+	Products,
+	Navbar,
+	Cart,
+	Checkout,
+	ProductDetails,
+} from "./components/index";
 import {
 	BrowserRouter as Router,
 	Route,
@@ -11,11 +17,14 @@ import {
 	useFetchCart,
 	useFetchProducts,
 } from "./hooks";
+
 function App() {
 	const removeFromCartMutation = useRemoveFromCart();
 	const emptyCartMutation = useEmptyCart();
 	const updateCartQuantityMutation = useUpdateCartQuantity();
+
 	// Set up state for products
+
 	const {
 		data: products,
 		isLoading: isProductsLoading,
@@ -68,7 +77,7 @@ function App() {
 				/>
 				{/* Render Cart component on /cart page */}
 				<Route
-					path="cart"
+					path="/cart"
 					element={
 						<Cart
 							isCartLoading={isCartLoading}
@@ -81,15 +90,15 @@ function App() {
 					}
 				/>
 				<Route
-					path="checkout"
+					path="/checkout"
 					element={
-						<Checkout
-							refetchCart={refetchCart}
-							isCartLoading={isCartLoading}
-							cart={cart}
-						/>
+						<Checkout isCartLoading={isCartLoading} cart={cart} />
 					}
 				/>
+				{/* <Route
+					path="/product/:productId"
+					element={<ProductDetails />}
+				/> */}
 			</Switch>
 		</Router>
 	);

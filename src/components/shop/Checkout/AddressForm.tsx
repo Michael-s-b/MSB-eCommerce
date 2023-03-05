@@ -40,44 +40,86 @@ const AddressForm: React.FC<Props> = ({
 
 	const {
 		isSuccess: isFetchingCountriesSuccess,
+		isFetching: isFetchingCountries,
 		data: shippingCountries,
 		isLoading: isCountriesLoading,
 		error: countriesError,
 		isIdle: isCountriesIdle,
 	} = useFetchShippingCountries(checkoutToken?.id);
+
 	const [shippingCountry, setShippingCountry] = useState<string>("");
+
 	const {
-		isFetched: isSubdivisionsFetched,
+		isFetching: isFetchingSubdivisions,
 		isSuccess: isFetchingSubdivisionsSuccess,
 		data: shippingSubdivisions,
 		isLoading: isSubdivisionsLoading,
 		isIdle: isSubdivisionsIdle,
-	} = useFetchShippingSubdivisions(shippingCountry);
+	} = useFetchShippingSubdivisions(
+		shippingCountry,
+		isCountriesLoading,
+		isFetchingCountries
+	);
+
 	const [shippingSubdivision, setShippingSubdivision] = useState("");
+
 	const { data: shippingOptions, isSuccess: isFetchingOptionsSuccess } =
 		useFetchShippingOptions(
 			checkoutToken?.id,
 			shippingCountry,
-			shippingSubdivision
+			shippingSubdivision,
+			isCountriesLoading,
+			isFetchingCountries,
+			isSubdivisionsLoading,
+			isFetchingSubdivisions
 		);
 	const [shippingOption, setShippingOption] = useState("");
 
 	useEffect(() => {
-		if (isFetchingCountriesSuccess) {
+		if (isCountriesLoading || isFetchingCountries) {
+			setShippingCountry("");
+			setShippingSubdivision("");
+			setShippingOption("");
+		}
+	}, [shippingCountries, isCountriesLoading, isFetchingCountries]);
+
+	useEffect(() => {
+		if (isSubdivisionsLoading || isFetchingSubdivisions) {
+			setShippingSubdivision("");
+			setShippingOption("");
+		}
+	}, [shippingCountries, isSubdivisionsLoading, isFetchingSubdivisions]);
+
+	useEffect(() => {
+		if (
+			isFetchingCountriesSuccess &&
+			!isFetchingCountries &&
+			!isCountriesLoading
+		) {
 			//@ts-expect-error
 			setShippingCountry(shippingCountries.at(0)?.id);
 		}
 	}, [isFetchingCountriesSuccess]);
 
 	useEffect(() => {
-		if (isFetchingSubdivisionsSuccess) {
+		if (
+			isFetchingSubdivisionsSuccess &&
+			!isFetchingCountries &&
+			!isCountriesLoading
+		) {
 			//@ts-expect-error
 			setShippingSubdivision(shippingSubdivisions.at(0)?.id);
 		}
 	}, [isFetchingSubdivisionsSuccess, shippingCountry]);
 
 	useEffect(() => {
-		if (isFetchingOptionsSuccess) {
+		if (
+			isFetchingOptionsSuccess &&
+			!isFetchingCountries &&
+			!isCountriesLoading &&
+			!isFetchingSubdivisions &&
+			!isSubdivisionsLoading
+		) {
 			//@ts-expect-error
 			setShippingOption(shippingOptions.at(0)?.id);
 		}
@@ -200,6 +242,7 @@ const AddressForm: React.FC<Props> = ({
 						<Grid item xs={12} sm={6}>
 							<InputLabel>Shipping Country</InputLabel>
 							<Select
+								defaultValue=""
 								required
 								value={shippingCountry}
 								fullWidth
@@ -223,6 +266,7 @@ const AddressForm: React.FC<Props> = ({
 						<Grid item xs={12} sm={6}>
 							<InputLabel>Shipping Subdivision</InputLabel>
 							<Select
+								defaultValue=""
 								value={shippingSubdivision}
 								fullWidth
 								onChange={(e) => {
@@ -243,8 +287,9 @@ const AddressForm: React.FC<Props> = ({
 							</Select>
 						</Grid>
 						<Grid item xs={12} sm={6}>
-							<InputLabel>Shipping Options</InputLabel>
+							<InputLabel>Shipping Option</InputLabel>
 							<Select
+								defaultValue=""
 								value={shippingOption}
 								fullWidth
 								onChange={(e) => {

@@ -1,7 +1,11 @@
 import { useQuery } from "react-query";
 import { fetchShippingSubdivisions } from "../api";
-
-const useFetchShippingSubdivisions = (countryCode: string) => {
+// so funcione quando paises estiver pronto, isto é, quando nao estiver fetching, nem loading etc
+const useFetchShippingSubdivisions = (
+	countryCode: string,
+	isCountriesLoading?: boolean,
+	isFetchingCountries?: boolean
+) => {
 	return useQuery<
 		{
 			[name: string]: string;
@@ -12,7 +16,9 @@ const useFetchShippingSubdivisions = (countryCode: string) => {
 		["country-shipping-subdivisions", countryCode],
 		() => fetchShippingSubdivisions(countryCode),
 		{
-			enabled: !!countryCode,
+			enabled:
+				!!countryCode && !isCountriesLoading && !isFetchingCountries,
+
 			select: (subdivisions) => {
 				const formatedSubdivisions = Object.entries(subdivisions).map(
 					([code, name]) => {

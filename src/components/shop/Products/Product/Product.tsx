@@ -12,6 +12,7 @@ import { AddShoppingCart } from "@material-ui/icons";
 import useStyles from "./styles";
 import { Product as ProductType } from "@chec/commerce.js/types/product";
 import { useAddToCart } from "../../../../hooks";
+import { Link } from "react-router-dom";
 interface Props {
 	product: ProductType | undefined;
 }
@@ -31,11 +32,13 @@ const Product: React.FC<Props> = ({
 
 	return (
 		<Card className={classes.root}>
+			{/* <Link to={`product/${product.id}`}> */}
 			<CardMedia
 				className={classes.media}
 				image={product.image?.url}
 				title={product.name}
 			/>
+			{/* </Link> */}
 			<CardContent>
 				<div className={classes.cardContent}>
 					<Typography

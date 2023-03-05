@@ -31,6 +31,7 @@ const FormInput: React.FC<Props> = ({ name, label, required, rules }) => {
 		<Grid item xs={12} sm={6}>
 			{/* The Controller component from the react-hook-form library */}
 			<Controller
+				defaultValue={""}
 				name={name} // The name of the field, used to connect it to the form state
 				control={control} // The form control instance
 				rules={rules} // Validation rules for the field
