@@ -4,6 +4,7 @@ import {
 	Cart,
 	Checkout,
 	ProductDetails,
+	Footer,
 } from "./components/index";
 import {
 	BrowserRouter as Router,
@@ -95,11 +96,12 @@ function App() {
 						<Checkout isCartLoading={isCartLoading} cart={cart} />
 					}
 				/>
-				{/* <Route
+				<Route
 					path="/product/:productId"
 					element={<ProductDetails />}
-				/> */}
+				/>
 			</Switch>
+			<Footer />
 		</Router>
 	);
 }

@@ -10,3 +10,4 @@ export { default as useFetchShippingSubdivisions } from "./useFetchShippingSubdi
 export { default as useFetchShippingOptions } from "./useFetchShippingOptions";
 export { default as useRefreshCart } from "./useRefreshCart";
 export { default as useCaptureCheckout } from "./useCaptureCheckout";
+export { default as useFetchProduct } from "./useFetchProduct";

@@ -1,56 +1,86 @@
 import { Grid, Paper, Typography, Button } from "@material-ui/core";
-import React from "react";
 import { useParams } from "react-router-dom";
+import Loading from "../../layout/Loading/Loading";
+import Carousel from "react-material-ui-carousel";
 import useStyle from "./styles";
+import { useAddToCart, useFetchProduct } from "../../../hooks";
+import { string } from "zod";
 interface Props {}
 const ProductDetails: React.FC<Props> = ({}) => {
 	const { productId } = useParams();
 	const classes = useStyle();
+	const addToCartMutation = useAddToCart();
+	const handleAddToCart = async (productId: string, quantity: number) => {
+		await addToCartMutation.mutateAsync({ productId, quantity });
+	};
 
+	const {
+		data: product,
+		isLoading: isProductLoading,
+		isSuccess,
+	} = useFetchProduct(productId);
+
+	if (!product || isProductLoading) {
+		if (!isSuccess && !isProductLoading) {
+			return (
+				<div>
+					<br />
+					<br />
+					<br />
+					<h1>Error 404 produto não encontrado</h1>
+				</div>
+			);
+		}
+		return <Loading />;
+	}
 	return (
 		<>
 			<div className={classes.toolbar}></div>
-			<div>ProductDetails{productId}</div>
 			<div>
 				<Grid container spacing={2}>
-					<Grid item xs={12} sm={12}>
-						<Paper className={classes.paper}>
-							<img
-								src="https://cdn.chec.io/merchants/50417/assets/RxA1lhX98NTjELBT|colorware-magic-keyboard-1.jpg"
-								alt="Product Image"
-								className={classes.image}
-							/>
-						</Paper>
+					<Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+						<Carousel autoPlay={false}>
+							{product.assets.map((asset) => {
+								return (
+									<Paper
+										elevation={3}
+										className={classes.imgPaper}
+										key={asset.id}>
+										<img
+											src={asset.url}
+											className={classes.image}
+										/>
+									</Paper>
+								);
+							})}
+						</Carousel>
 					</Grid>
-					<Grid item xs={12} sm={12}>
-						<Paper className={classes.paper}>
-							<Typography variant="h4" gutterBottom>
-								Product Name
+					<Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+						<Paper
+							className={classes.descriptionPaper}
+							elevation={3}>
+							<Typography variant="h5" gutterBottom>
+								{product.name}
 							</Typography>
 							<Typography
 								variant="h5"
 								className={classes.price}
 								gutterBottom>
-								$99.99
+								{product.price.formatted_with_symbol}
 							</Typography>
-							<Typography variant="body1" gutterBottom>
-								Lorem ipsum dolor sit amet consectetur,
-								adipisicing elit. Dolorem porro repudiandae
-								unde. Laboriosam, rerum. Aliquam quaerat
-								voluptatibus quod! Ipsam suscipit placeat
-								obcaecati hic quod adipisci aliquam cupiditate
-								iure iste architecto! Lorem, ipsum dolor sit
-								amet consectetur adipisicing elit. Voluptate
-								culpa, perspiciatis fuga fugiat, eius mollitia
-								laudantium quae quasi quia deserunt quaerat
-								repudiandae laboriosam corporis saepe neque sed
-								beatae ipsum reprehenderit. Lorem ipsum dolor
-								sit, amet consectetur adipisicing elit. Quaerat
-								fugiat harum ipsum quam earum eius numquam esse
-								sapiente dolore! Ipsam iure nulla aut amet
-								voluptatum minus asperiores quae sed fugit.
-							</Typography>
-							<Button variant="contained" color="primary">
+							<Typography
+								dangerouslySetInnerHTML={{
+									__html: product.description,
+								}}
+								variant="body2"
+								color="textSecondary"
+								gutterBottom></Typography>
+							<Button
+								onClick={() => {
+									handleAddToCart(productId as string, 1);
+								}}
+								variant="contained"
+								color="primary">
 								Add to Cart
 							</Button>
 						</Paper>

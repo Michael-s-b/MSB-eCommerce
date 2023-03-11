@@ -37,7 +37,8 @@ const Navbar: React.FC<Props> = ({ cartTotalItems }) => {
 					</Link>
 
 					<div className={classes.grow} />
-					{location.pathname === "/" ? (
+					{location.pathname !== "/cart" &&
+					location.pathname !== "/checkout" ? (
 						<div className={classes.button}>
 							<Link to={"/cart"}>
 								<IconButton

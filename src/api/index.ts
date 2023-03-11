@@ -5,3 +5,4 @@ export { default as fetchShippingCountries } from "./fetchShippingCountries";
 export { default as fetchShippingSubdivisions } from "./fetchShippingSubdivisions";
 export { default as fetchShippingOptions } from "./fetchShippingOptions";
 export { default as fetchIncomingOrder } from "./fetchIncomingOrder";
+export { default as fetchProduct } from "./fetchProduct";

@@ -6,12 +6,24 @@ export default makeStyles((theme) => ({
 		flexGrow: 1,
 		padding: theme.spacing(2),
 	},
-	paper: {
+	descriptionPaper: {
 		padding: theme.spacing(2),
+		margin: "auto",
+		width: "90%",
+		// height: "500px",
+	},
+	imgPaper: {
+		padding: theme.spacing(2),
+		margin: "auto",
+		width: "90%",
+		height: "500px",
+		display: "flex",
+		justifyContent: "center",
 	},
 	image: {
-		maxWidth: "100%",
+		width: "100%",
 		maxHeight: "100%",
+		objectFit: "contain",
 	},
 	price: {
 		fontWeight: "bold",
