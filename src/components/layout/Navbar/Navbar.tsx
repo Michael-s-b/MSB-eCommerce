@@ -7,16 +7,19 @@ import {
 	MenuItem,
 	Menu,
 	Typography,
+	Button,
 } from "@material-ui/core";
 import { ShoppingCart } from "@material-ui/icons";
 import logo from "../../../assets/commerce.png";
 import useStyle from "./styles";
 import { Link, useLocation } from "react-router-dom";
+import { Brightness4Outlined } from "@material-ui/icons";
 
 interface Props {
 	cartTotalItems: number | undefined;
+	toggleTheme: () => void;
 }
-const Navbar: React.FC<Props> = ({ cartTotalItems }) => {
+const Navbar: React.FC<Props> = ({ cartTotalItems, toggleTheme }) => {
 	const classes = useStyle();
 	const location = useLocation();
 	return (
@@ -26,7 +29,10 @@ const Navbar: React.FC<Props> = ({ cartTotalItems }) => {
 					<Link
 						to={"/"}
 						style={{ textDecoration: "none", color: "inherit" }}>
-						<Typography variant="h6" className={classes.image}>
+						<Typography
+							variant="h6"
+							className={classes.image}
+							color="textPrimary">
 							<img
 								src={logo}
 								alt="MSB e-Commerce"
@@ -37,6 +43,12 @@ const Navbar: React.FC<Props> = ({ cartTotalItems }) => {
 					</Link>
 
 					<div className={classes.grow} />
+					<IconButton
+						onClick={() => {
+							toggleTheme();
+						}}>
+						<Brightness4Outlined />
+					</IconButton>
 					{location.pathname !== "/cart" &&
 					location.pathname !== "/checkout" ? (
 						<div className={classes.button}>

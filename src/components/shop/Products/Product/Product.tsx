@@ -63,23 +63,25 @@ const Product: React.FC<Props> = ({ product }) => {
 								.replace(/^Sobre este item/, "")
 								.slice(0, 150) + "...",
 					}}></Typography>
-
-				<Typography variant="h5" color="primary">
-					{product.price.formatted_with_symbol}
-				</Typography>
 			</CardContent>
 			<CardActions disableSpacing className={classes.cardActions}>
-				{addToCartMutation.isLoading ? (
-					<CircularProgress size={48} />
-				) : (
-					<IconButton
-						onClick={() => {
-							handleAddToCart(product.id, 1);
-						}}
-						aria-label="Add to Cart">
-						<AddShoppingCart />
-					</IconButton>
-				)}
+				<>
+					<Typography variant="h5" className={classes.price}>
+						{product.price.formatted_with_symbol}
+					</Typography>
+					<div className={classes.grow}></div>
+					{addToCartMutation.isLoading ? (
+						<CircularProgress size={48} />
+					) : (
+						<IconButton
+							onClick={() => {
+								handleAddToCart(product.id, 1);
+							}}
+							aria-label="Add to Cart">
+							<AddShoppingCart />
+						</IconButton>
+					)}
+				</>
 			</CardActions>
 		</Card>
 	);

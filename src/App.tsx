@@ -18,8 +18,34 @@ import {
 	useFetchCart,
 	useFetchProducts,
 } from "./hooks";
+import {
+	Box,
+	createTheme,
+	PaletteType,
+	ThemeProvider,
+} from "@material-ui/core";
+import { useState } from "react";
+import { CssBaseline } from "@material-ui/core";
+const now = new Date();
+const currentHour = now.getHours();
+const isDarkMode = currentHour < 6 || currentHour >= 18;
 
 function App() {
+	const [themeMode, setThemeMode] = useState<PaletteType>(
+		isDarkMode ? "dark" : "light"
+	);
+	const theme = createTheme({
+		palette: {
+			type: themeMode,
+		},
+	});
+	const toggleTheme = () => {
+		setThemeMode((previousTheme) => {
+			console.log(themeMode);
+			return previousTheme === "light" ? "dark" : "light";
+		});
+	};
+
 	const removeFromCartMutation = useRemoveFromCart();
 	const emptyCartMutation = useEmptyCart();
 	const updateCartQuantityMutation = useUpdateCartQuantity();
@@ -36,7 +62,6 @@ function App() {
 		data: cart,
 		isLoading: isCartLoading,
 		error: cartError,
-		refetch: refetchCart,
 	} = useFetchCart();
 
 	// Define function to add item to cart
@@ -62,46 +87,59 @@ function App() {
 	// Set up routes using react-router-dom components
 	return (
 		<Router>
-			{/* Pass cart total items to Navbar component */}
-			<Navbar cartTotalItems={cart?.total_items} />
-			<Switch>
-				{/* Render Products component on homepage */}
-				<Route
-					path="/"
-					element={
-						<Products
-							products={products}
-							isProductsLoading={isProductsLoading}
-							error={productsError}
+			<ThemeProvider theme={theme}>
+				<CssBaseline />
+				<Box>
+					{/* Pass cart total items to Navbar component */}
+					<Navbar
+						cartTotalItems={cart?.total_items}
+						toggleTheme={toggleTheme}
+					/>
+					<Switch>
+						{/* Render Products component on homepage */}
+						<Route
+							path="/"
+							element={
+								<Products
+									products={products}
+									isProductsLoading={isProductsLoading}
+									error={productsError}
+								/>
+							}
 						/>
-					}
-				/>
-				{/* Render Cart component on /cart page */}
-				<Route
-					path="/cart"
-					element={
-						<Cart
-							isCartLoading={isCartLoading}
-							error={cartError}
-							cart={cart}
-							handleUpdateCartQuantity={handleUpdateCartQuantity}
-							handleRemoveFromCart={handleRemoveFromCart}
-							handleEmptyCart={handleEmptyCart}
+						{/* Render Cart component on /cart page */}
+						<Route
+							path="/cart"
+							element={
+								<Cart
+									isCartLoading={isCartLoading}
+									error={cartError}
+									cart={cart}
+									handleUpdateCartQuantity={
+										handleUpdateCartQuantity
+									}
+									handleRemoveFromCart={handleRemoveFromCart}
+									handleEmptyCart={handleEmptyCart}
+								/>
+							}
 						/>
-					}
-				/>
-				<Route
-					path="/checkout"
-					element={
-						<Checkout isCartLoading={isCartLoading} cart={cart} />
-					}
-				/>
-				<Route
-					path="/product/:productId"
-					element={<ProductDetails />}
-				/>
-			</Switch>
-			<Footer />
+						<Route
+							path="/checkout"
+							element={
+								<Checkout
+									isCartLoading={isCartLoading}
+									cart={cart}
+								/>
+							}
+						/>
+						<Route
+							path="/product/:productId"
+							element={<ProductDetails />}
+						/>
+					</Switch>
+					<Footer />
+				</Box>
+			</ThemeProvider>
 		</Router>
 	);
 }

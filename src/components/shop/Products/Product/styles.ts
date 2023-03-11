@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 
-export default makeStyles(() => ({
+export default makeStyles((theme) => ({
 	root: {
 		maxWidth: "100%",
 		// minWidth: 360,
@@ -17,5 +17,11 @@ export default makeStyles(() => ({
 	cardContent: {
 		display: "flex",
 		justifyContent: "space-between",
+	},
+	price: {
+		color: theme.palette.success.main,
+	},
+	grow: {
+		flexGrow: 0.9,
 	},
 }));
