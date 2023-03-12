@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Typography, Button, Grid } from "@material-ui/core";
+import { Container, Typography, Button, Grid, Slide } from "@material-ui/core";
 import useStyle from "./styles";
 import { Cart as CartType } from "@chec/commerce.js/types/cart";
 import CartItem from "./CartItem/CartItem";
@@ -39,24 +39,24 @@ const Cart: React.FC<Props> = ({
 			<>
 				<Grid container spacing={3}>
 					{cart
-						? cart.line_items.map((item) => {
+						? cart.line_items.map((item, index) => {
 								return (
-									<Grid
-										item
-										xs={12}
-										sm={6}
-										lg={4}
-										key={item.id}>
-										<CartItem
-											item={item}
-											handleRemoveFromCart={
-												handleRemoveFromCart
-											}
-											handleUpdateCartQuantity={
-												handleUpdateCartQuantity
-											}
-										/>
-									</Grid>
+									<Slide
+										in={!isCartLoading}
+										key={item.id}
+										timeout={(index + 1) * 500}>
+										<Grid item xs={12} sm={6} lg={4}>
+											<CartItem
+												item={item}
+												handleRemoveFromCart={
+													handleRemoveFromCart
+												}
+												handleUpdateCartQuantity={
+													handleUpdateCartQuantity
+												}
+											/>
+										</Grid>
+									</Slide>
 								);
 						  })
 						: null}
